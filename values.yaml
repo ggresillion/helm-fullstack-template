@@ -1,0 +1,68 @@
+# Default values for your project.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+nameOverride: ""
+fullnameOverride: ""
+
+replicaCount: 1
+
+api:
+  image:
+    repository: <api-image>
+    tag: latest
+    pullPolicy: Always
+  service:
+    type: ClusterIP
+    port: 80
+
+client:
+  image:
+    repository: <client-image>
+    tag: latest
+    pullPolicy: Always
+  service:
+    type: ClusterIP
+    port: 80
+
+# You need to provide image credentials if you pull from a private repository
+imageCredentials:
+  name: <name>
+  registry: <registry>
+  username: <username>
+  password: <password>
+
+ingress:
+  enabled: true
+  annotations: {}
+  hosts:
+    - <host>
+  secretName: <secretName>
+
+# This can be replaced with any other database
+# You can configure values for child charts
+postgresql:
+  enabled: true
+  postgresqlPassword: <password>
+  postgresqlDatabase: <database>
+  postgresqlUsername: <username>
+  persistence:
+    size: 1Gi
+
+resources: {}
+# We usually recommend not to specify default resources and to leave this as a conscious
+# choice for the user. This also increases chances charts run on environments with little
+# resources, such as Minikube. If you do want to specify resources, uncomment the following
+# lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+# limits:
+#   cpu: 100m
+#   memory: 128Mi
+# requests:
+#   cpu: 100m
+#   memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

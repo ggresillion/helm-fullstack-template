@@ -1,0 +1,7 @@
+# Configure chart dependencies for your project.
+# Can be left empty.
+dependencies:
+  - name: postgresql
+    version: 6.3.12
+    repository: https://kubernetes-charts.storage.googleapis.com
+    condition: postgresql.enabled

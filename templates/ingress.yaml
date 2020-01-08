@@ -1,0 +1,43 @@
+{{- if .Values.ingress.enabled -}}
+{{- $fullName := include "takeoff.fullname" . -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}
+  labels:
+{{ include "takeoff.labels" . | indent 4 }}
+  annotations:
+    {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    nginx.org/websocket-services: {{ $fullName }}-api
+spec:
+{{- if .Values.ingress.hosts }}
+  tls:
+    - hosts:
+      {{- range .Values.ingress.hosts }}
+        - {{ . | quote }}
+      {{- end }}
+      {{- if .Values.ingress.secretName }}
+      secretName: {{ .Values.ingress.secretName }}
+      {{- end}}
+{{- end }}
+  rules:
+  {{- range .Values.ingress.hosts }}
+    - host: {{ . | quote }}
+      http:
+        paths:
+          - path: /minio
+            backend:
+              serviceName: {{ $fullName }}-minio
+              servicePort: api
+          - path: /api/v1
+            backend:
+              serviceName: {{ $fullName }}-api
+              servicePort: http
+          - path: /
+            backend:
+              serviceName: {{ $fullName }}-client
+              servicePort: http
+  {{- end }}
+{{- end }}
